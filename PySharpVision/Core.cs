@@ -56,11 +56,19 @@ namespace PySharpVision
             Console.WriteLine("Received: {0}", data);
         }
 
-        public string SaveMemory(string file_path, string memory_name)
+        public string SaveMemory(object input, string memory_name)
         {
-            Bitmap b = new Bitmap(file_path);
+            Bitmap bitmap = null;
+            if (input is string filePath)
+            {
+                bitmap = new Bitmap(filePath);
+            }
+            else if (input is Bitmap inputBitmap)
+            {
+                bitmap = inputBitmap;
+            }
             MemoryStream ms = new MemoryStream();
-            b.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
             byte[] bytes = ms.GetBuffer();
             ms.Close();
             var mmf = MemoryMappedFile.CreateOrOpen(memory_name, bytes.Length, MemoryMappedFileAccess.ReadWrite);
@@ -83,5 +91,18 @@ namespace PySharpVision
             return bytes.Length.ToString();
         }
 
+        public string SaveMemory2(string file_path, string memory_name)
+        {
+            Bitmap b = new Bitmap(file_path);
+            MemoryStream ms = new MemoryStream();
+            b.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            byte[] bytes = ms.GetBuffer();
+            ms.Close();
+            var mmf = MemoryMappedFile.CreateOrOpen(memory_name, bytes.Length, MemoryMappedFileAccess.ReadWrite);
+            var viewAccessor = mmf.CreateViewAccessor(0, bytes.Length);
+            viewAccessor.Write(0, bytes.Length); ;
+            viewAccessor.WriteArray<byte>(0, bytes, 0, bytes.Length);
+            return bytes.Length.ToString();
+        }
     }
 }

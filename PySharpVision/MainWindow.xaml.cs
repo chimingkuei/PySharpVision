@@ -28,6 +28,7 @@ using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
 using static PySharpVision.BaseLogRecord;
 using System.Diagnostics;
+using System.Web;
 
 namespace PySharpVision
 {
@@ -173,7 +174,7 @@ namespace PySharpVision
                                     }
                                     // Translate data bytes to a ASCII string.
                                     Do.Getmsg(bytes, i);
-                                    Do.SaveMemory1(BC.result, "5MImage");
+                                    Do.SaveMemory(BC.result, "5MImage");
                                     // Process the data sent by the client.
                                     Do.Sendmsg(stream, "Transfer images to memory!");
                                     //if (filenum == files.Length - 1)
@@ -201,22 +202,29 @@ namespace PySharpVision
                     }
                 case nameof(Stop):
                     {
-                        BC.ContinueAcquisition();
-                        //cts.Cancel();
+                        cts.Cancel();
                         break;
                     }
                 case nameof(GetImageBytesLength):
                     {
-                        //if (!string.IsNullOrEmpty(Image_Path.Text))
-                        //{
-                        //    Console.WriteLine(Do.SaveMemory(Image_Path.Text, "ImageShareMemory"));
-                        //}
-                        //else
-                        //{
-                        //    MessageBox.Show("請輸入影像路徑!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        //}
-                        OpenCvSharp.Mat src = OpenCvSharp.Extensions.BitmapConverter.ToMat(BC.result);
-                        OpenCvSharp.Mat result = src.Threshold(150, 255, OpenCvSharp.ThresholdTypes.Binary);
+                        if (!string.IsNullOrEmpty(Image_Path.Text))
+                        {
+                            Console.WriteLine(Do.SaveMemory(Image_Path.Text, "ImageShareMemory"));
+                        }
+                        else
+                        {
+                            MessageBox.Show("請輸入影像路徑!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        break;
+                    }
+                case nameof(Continue_Acquisition):
+                    {
+                        BC.ContinueAcquisition();
+                        break;
+                    }
+                case nameof(Stop_Continue_Acquisition):
+                    {
+                        BC.StopAcquisition();
                         break;
                     }
             }

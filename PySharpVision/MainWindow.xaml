@@ -43,16 +43,22 @@
                     <WindowsFormsHost  Margin="5,7,218,4">
                         <wf:PictureBox x:Name="Display_Windows" BorderStyle="FixedSingle"/>
                     </WindowsFormsHost>
-                    <Button x:Name="Stop" Style="{StaticResource BaseButton}" Margin="791,160,39,231" Content="Stop" FontSize="18" Click="Main_Btn_Click"/>
+                    <Button x:Name="Start" Style="{StaticResource BaseButton}" Margin="794,49,36,342" Content="Start" Background="#FF3E6FB3" FontSize="18" Click="Main_Btn_Click"/>
+                    <Button x:Name="Stop" Style="{StaticResource BaseButton}" Margin="792,142,38,249" Content="Stop" Background="#FF3E6FB3" FontSize="18" Click="Main_Btn_Click"/>
+                    <Button x:Name="Continue_Acquisition" Style="{StaticResource BaseButton}" Margin="793,227,37,164" Content="Continue Acquisition" Background="#FF3E6FB3" FontSize="18" Click="Main_Btn_Click"/>
+                    <Button x:Name="Stop_Continue_Acquisition" Style="{StaticResource BaseButton}" Margin="792,305,38,86" Content="Stop Acquisition" Background="#FF3E6FB3" FontSize="18" Click="Main_Btn_Click"/>
                     <TextBox x:Name="Parameter1" Style="{StaticResource BaseTextBox}" Tag="请输入内容..." Margin="572,373,270,33"/>
-                    <TextBox x:Name="Parameter2" Style="{StaticResource BaseTextBox}" Tag="请输入内容..." Margin="795,308,47,98"/>
-                    <Button x:Name="Start" Style="{StaticResource BaseButton}" Margin="788,67,42,324" Content="Start" FontSize="18" Click="Main_Btn_Click"/>
+                    <TextBox x:Name="Parameter2" Style="{StaticResource BaseTextBox}" Tag="请输入内容..." Margin="793,381,49,25"/>
                 </Grid>
             </TabItem>
             <TabItem Header="參數畫面" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
-                    <Button x:Name="GetImageBytesLength" Style="{StaticResource BaseButton}" Margin="92,68,676,323" Content="GetImageBytesLength" FontSize="18" Click="Main_Btn_Click"/>
-                    <TextBox x:Name="Image_Path" Style="{StaticResource BaseTextBox}" Tag="請輸入影像路徑!" Margin="321,78,196,328"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="13*"/>
+                        <ColumnDefinition Width="311*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="GetImageBytesLength" Style="{StaticResource BaseButton}" Margin="53,68,738,323" Content="GetImageBytesLength" Background="#FF3E6FB3" FontSize="18" Click="Main_Btn_Click" Grid.Column="1"/>
+                    <TextBox x:Name="Image_Path" Style="{StaticResource BaseTextBox}" Tag="請輸入影像路徑!" Margin="282,78,196,328" Grid.Column="1"/>
                 </Grid>
             </TabItem>
         </TabControl>
