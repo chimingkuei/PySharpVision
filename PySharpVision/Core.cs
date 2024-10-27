@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Windows.Markup;
 using System.Net;
 using System.Windows;
+using System.Diagnostics;
 
 namespace PySharpVision
 {
@@ -78,31 +79,15 @@ namespace PySharpVision
             return bytes.Length.ToString();
         }
 
-        public string SaveMemory1(Bitmap bitmap, string memory_name)
+        public void RunPython()
         {
-            MemoryStream ms = new MemoryStream();
-            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-            byte[] bytes = ms.GetBuffer();
-            ms.Close();
-            var mmf = MemoryMappedFile.CreateOrOpen(memory_name, bytes.Length, MemoryMappedFileAccess.ReadWrite);
-            var viewAccessor = mmf.CreateViewAccessor(0, bytes.Length);
-            viewAccessor.Write(0, bytes.Length); ;
-            viewAccessor.WriteArray<byte>(0, bytes, 0, bytes.Length);
-            return bytes.Length.ToString();
+            Process process = new Process();
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.Arguments = "/K @echo off && cd Python && python Test.py";
+            process.StartInfo.UseShellExecute = true;
+            process.Start();
         }
 
-        public string SaveMemory2(string file_path, string memory_name)
-        {
-            Bitmap b = new Bitmap(file_path);
-            MemoryStream ms = new MemoryStream();
-            b.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-            byte[] bytes = ms.GetBuffer();
-            ms.Close();
-            var mmf = MemoryMappedFile.CreateOrOpen(memory_name, bytes.Length, MemoryMappedFileAccess.ReadWrite);
-            var viewAccessor = mmf.CreateViewAccessor(0, bytes.Length);
-            viewAccessor.Write(0, bytes.Length); ;
-            viewAccessor.WriteArray<byte>(0, bytes, 0, bytes.Length);
-            return bytes.Length.ToString();
-        }
+        
     }
 }

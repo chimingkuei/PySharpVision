@@ -34,7 +34,7 @@ def main():
                 break
             else:
                 print("Received:", response.decode()+"Predict")
-                byteSize = 20054070
+                byteSize = 15116598 #20054070
                 file_name = '5MImage'
                 f = mmap.mmap(0, byteSize, file_name, mmap.ACCESS_READ)
                 img = cv2.imdecode(np.frombuffer(f, np.uint8), cv2.IMREAD_COLOR)

@@ -158,7 +158,7 @@ namespace PySharpVision
                         {
                             try
                             {
-                                //string[] files = Directory.GetFiles(@"D:\Chimingkuei\repos\PySharpVision\Original Image");
+                                string[] files = Directory.GetFiles(@"D:\Chimingkuei\repos\PySharpVision\Original Image");
                                 Byte[] bytes = new Byte[256];
                                 (TcpListener server, TcpClient client, NetworkStream stream) = Do.TcpConnect();
                                 int i;
@@ -174,19 +174,20 @@ namespace PySharpVision
                                     }
                                     // Translate data bytes to a ASCII string.
                                     Do.Getmsg(bytes, i);
-                                    Do.SaveMemory(BC.result, "5MImage");
+                                    Do.SaveMemory(files[filenum], "5MImage");
+                                    //Do.SaveMemory(BC.result, "5MImage");
                                     // Process the data sent by the client.
                                     Do.Sendmsg(stream, "Transfer images to memory!");
-                                    //if (filenum == files.Length - 1)
-                                    //{
-                                    //    Do.Sendmsg(stream, "DisTcpConnect!");
-                                    //    Thread.Sleep(2000);
-                                    //    client.Close();
-                                    //}
-                                    //else
-                                    //{
-                                    //    filenum += 1;
-                                    //}
+                                    if (filenum == files.Length - 1)
+                                    {
+                                        Do.Sendmsg(stream, "DisTcpConnect!");
+                                        Thread.Sleep(2000);
+                                        client.Close();
+                                    }
+                                    else
+                                    {
+                                        filenum += 1;
+                                    }
                                 }
                             }
                             catch (SocketException ex)
@@ -198,6 +199,7 @@ namespace PySharpVision
                                 Do.DisTcpConnect();
                             }
                         }, cts.Token);
+                        Do.RunPython();
                         break;
                     }
                 case nameof(Stop):

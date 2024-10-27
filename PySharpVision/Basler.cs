@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
@@ -44,18 +45,12 @@ namespace PySharpVision
                         IntPtr ptrBmp = bmpData.Scan0;
                         converter.Convert(ptrBmp, bmpData.Stride * bitmap.Height, grabResult);
                         bitmap.UnlockBits(bmpData);
-                        #region DIP
-                        //OpenCvSharp.Mat src = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
-                        //OpenCvSharp.Mat result = src.Threshold(150, 255, OpenCvSharp.ThresholdTypes.Binary);
-                        #endregion
                         // Assign a temporary variable to dispose the bitmap after assigning the new bitmap to the display control.
                         Bitmap bitmapOld = Display.Image as Bitmap;
                         // Provide the display control with the new bitmap. This action automatically updates the display.
                         //Display.Image = bitmap;
                         result = bitmap;
-                        #region Show DIP Result
-                        //Display_Windows.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(result);
-                        #endregion
+                        //Thread.Sleep(500);
                         if (bitmapOld != null)
                         {
                             // Dispose the bitmap.
