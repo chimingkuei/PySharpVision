@@ -76,6 +76,7 @@ namespace PySharpVision
             var viewAccessor = mmf.CreateViewAccessor(0, bytes.Length);
             viewAccessor.Write(0, bytes.Length); ;
             viewAccessor.WriteArray<byte>(0, bytes, 0, bytes.Length);
+            bitmap.Dispose();
             return bytes.Length.ToString();
         }
 

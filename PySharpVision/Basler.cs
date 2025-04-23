@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,15 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Basler.Pylon;
 using OpenCvSharp;
+using OpenCvSharp.Extensions;
 
 namespace PySharpVision
 {
+    enum ImageFormat
+    {
+        RGB8, Mono8
+    }
+
     class Basler
     {
         public Camera camera = null;
@@ -24,7 +31,9 @@ namespace PySharpVision
         private Stopwatch stopWatch = new Stopwatch();
         public PictureBox Display = new PictureBox();
         public string image_storage_path;
-        public Bitmap result;
+        public int threshold { get; set; }
+        public Mat image { get; set; }
+        public ImageFormat ImageFormatType { get; set; }
 
         private void OnImageGrabbed(Object sender, ImageGrabbedEventArgs e)
         {
@@ -33,27 +42,32 @@ namespace PySharpVision
                 IGrabResult grabResult = e.GrabResult;
                 if (grabResult.IsValid)
                 {
-                    // Reduce the number of displayed images to a reasonable amount if the camera is acquiring images very fast.
                     if (!stopWatch.IsRunning || stopWatch.ElapsedMilliseconds > 33)
                     {
                         stopWatch.Restart();
-                        Bitmap bitmap = new Bitmap(grabResult.Width, grabResult.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-                        // Lock the bits of the bitmap.
-                        System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadWrite, bitmap.PixelFormat);
-                        // Place the pointer to the buffer of the bitmap.
-                        converter.OutputPixelFormat = PixelType.BGRA8packed;
-                        IntPtr ptrBmp = bmpData.Scan0;
-                        converter.Convert(ptrBmp, bmpData.Stride * bitmap.Height, grabResult);
-                        bitmap.UnlockBits(bmpData);
-                        // Assign a temporary variable to dispose the bitmap after assigning the new bitmap to the display control.
+                        Mat mat = null;
+                        switch (ImageFormatType)
+                        {
+                            case ImageFormat.RGB8:
+                                {
+                                    mat = new Mat(grabResult.Height, grabResult.Width, MatType.CV_8UC3);
+                                    converter.OutputPixelFormat = PixelType.BGR8packed;
+                                    break;
+                                }
+                            case ImageFormat.Mono8:
+                                {
+                                    mat = new Mat(grabResult.Height, grabResult.Width, MatType.CV_8UC1);
+                                    converter.OutputPixelFormat = PixelType.Mono8;
+                                    break;
+                                }
+                        }
+                        IntPtr ptrMat = mat.Data;
+                        converter.Convert(ptrMat, mat.Step() * mat.Rows, grabResult);
+                        image = mat;
                         Bitmap bitmapOld = Display.Image as Bitmap;
-                        // Provide the display control with the new bitmap. This action automatically updates the display.
-                        //Display.Image = bitmap;
-                        result = bitmap;
-                        //Thread.Sleep(500);
+                        Display.Image = mat.ToBitmap();
                         if (bitmapOld != null)
                         {
-                            // Dispose the bitmap.
                             bitmapOld.Dispose();
                         }
                     }
@@ -65,7 +79,6 @@ namespace PySharpVision
             }
             finally
             {
-                // Dispose the grab result if needed for returning it to the grab loop.
                 e.DisposeGrabResultIfClone();
             }
         }
