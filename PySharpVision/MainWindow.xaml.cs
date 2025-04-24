@@ -128,6 +128,16 @@ namespace PySharpVision
                 BC.OpenCamera();
             }
         }
+
+        private void DisTcpConnect(TcpClient client, NetworkStream stream)
+        {
+            if (cts.Token.IsCancellationRequested)
+            {
+                Do.Sendmsg(stream, "DisTcpConnect!");
+                client.Close();
+                return;
+            }
+        }
         #endregion
 
         #region Parameter and Init
@@ -164,14 +174,10 @@ namespace PySharpVision
                                 {
                                     string[] files = Directory.GetFiles(@"D:\Chimingkuei\repos\PySharpVision\Original Image");
                                     int filenum1 = files.Length;
+                                    DisTcpConnect(client, stream);
                                     while (filenum1 != 0)
                                     {
-                                        if (cts.Token.IsCancellationRequested)
-                                        {
-                                            Do.Sendmsg(stream, "DisTcpConnect!");
-                                            client.Close();
-                                            return;
-                                        }
+                                        DisTcpConnect(client, stream);
                                         Do.Getmsg(bytes, stream.Read(bytes, 0, bytes.Length));
                                         Do.SaveMemory(files[filenum1-1], "5MImage");
                                         //Do.SaveMemory(BC.result, "5MImage");

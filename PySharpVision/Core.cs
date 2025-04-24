@@ -51,9 +51,9 @@ namespace PySharpVision
             Console.WriteLine("Sent: {0}", message);
         }
 
-        public void Getmsg(Byte[] bytes, int i)
+        public void Getmsg(Byte[] bytes, int message)
         {
-            string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+            string data = System.Text.Encoding.ASCII.GetString(bytes, 0, message);
             Console.WriteLine("Received: {0}", data);
         }
 
@@ -84,7 +84,7 @@ namespace PySharpVision
         {
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = "/K @echo off && cd Python && python Test.py";
+            process.StartInfo.Arguments = "/K @echo off && cd Python && python SharpVisionClient.py";
             process.StartInfo.UseShellExecute = true;
             process.Start();
         }
