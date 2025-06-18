@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace PySharpVision
 {
-    class Core
+    class CommunicationHandler
     {
 
         TcpListener server = null;

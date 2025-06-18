@@ -147,7 +147,7 @@ namespace PySharpVision
             LoadConfig(0, 0);
         }
         BaseConfig<RootObject> Config = new BaseConfig<RootObject>();
-        Core Do = new Core();
+        CommunicationHandler Do = new CommunicationHandler();
         CancellationTokenSource cts;
         Basler BC = new Basler();
         #region Log
